@@ -28,15 +28,25 @@ void setup() {
   printData();
   Serial.println("----------------------------------------");
   
+  // Initialize serial communication at 9600 bits per second:
+  Serial.begin(9600);
 }
 
 void loop() {
   
-  // check the network connection once every 10 seconds:
-  delay(10000);
+  // check the network connection:
   printData();
   Serial.println("----------------------------------------");
 
+  // Capacitive 
+  int capValue = analogRead(A0);
+  Serial.println(capValue);
+  
+  // Resistive  
+  int resValue = analogRead(A1);
+  Serial.println(resValue);
+  
+  delay(100);        // delay in between reads for stability
 }
 
 void printData() {
