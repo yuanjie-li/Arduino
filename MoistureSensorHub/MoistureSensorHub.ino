@@ -72,6 +72,5 @@ void sendData(int value) {
   int device_id = 1; // Hardcoded from my one sensor.
 
   IPAddress server(192,168,50,3);
-  char json[];
   String PostData = "{new_value: , new_device_id}";
 }
