@@ -1,4 +1,7 @@
+#include <HttpClient.h>
+#include <b64.h>
 #include <WiFiNINA.h>
+#include <ArduinoJson.h>
 
 #include "secrets.h"
 
@@ -25,7 +28,7 @@ void setup() {
   Serial.println("You're connected to the network");
 
   Serial.println("----------------------------------------");
-  printData();
+  printWifi();
   Serial.println("----------------------------------------");
   
   // Initialize serial communication at 9600 bits per second:
@@ -35,21 +38,18 @@ void setup() {
 void loop() {
   
   // check the network connection:
-  printData();
+  printWifi();
   Serial.println("----------------------------------------");
 
   // Capacitive 
   int capValue = analogRead(A0);
   Serial.println(capValue);
+  sendData(capValue);
   
-  // Resistive  
-  int resValue = analogRead(A1);
-  Serial.println(resValue);
-  
-  delay(100);        // delay in between reads for stability
+  delay(1000);        // delay in between reads for stability
 }
 
-void printData() {
+void printWifi() {
   Serial.println("Board Information:");
   // print your board's IP address:
   IPAddress ip = WiFi.localIP();
@@ -66,4 +66,12 @@ void printData() {
   Serial.print("signal strength (RSSI):");
   Serial.println(rssi);
 
+}
+
+void sendData(int value) {
+  int device_id = 1; // Hardcoded from my one sensor.
+
+  IPAddress server(192,168,50,3);
+  char json[];
+  String PostData = "{new_value: , new_device_id}";
 }
