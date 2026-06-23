@@ -1,3 +1,6 @@
+#include <HttpClient.h>
+#include <b64.h>
+
 #include <WiFiNINA.h>
 #include <ArduinoJson.h>
 
@@ -7,9 +10,7 @@
 char ssid[] = SECRET_SSID;        
 char pass[] = SECRET_PASS;        
 int status = WL_IDLE_STATUS;     
-WiFiClient client;
   
-
 void setup() {
   while (!Serial);
 
@@ -36,8 +37,7 @@ void setup() {
   // Initialize serial communication at 9600 bits per second:
   Serial.begin(9600);
 
-  // Connect to the API server 
-  client.connect("192.168.50.3", 8000);
+
 }
 
 void loop() {
@@ -48,10 +48,11 @@ void loop() {
 
   // Capacitive 
   int capValue = analogRead(A0);
-  Serial.println(capValue);
   sendData(capValue, 1);
+  Serial.println(capValue);
+  
 
-  delay(1000);        // delay in between reads for stability
+  delay(100000);        // delay in between reads for stability
 }
 
 void printWifi() {
@@ -75,8 +76,39 @@ void printWifi() {
 
 void sendData(int value, int device_id) {
   
-  const char* endPoint = "http://192.168.50.3/postgresDb/create/measurements";
+  // Set up the HTTP Client 
+  WiFiClient wifi;
+  HttpClient http(wifi);
 
-  
+  // Connection Info 
+  const  IPAddress& ipAddr = "192.168.50.3";
+  const char* serverName = NULL;
+  uint16_t port = 8000;
+
+  /*
+  String query = "?new_value=" + String(value) + "&new_device_id=" + String(device_id);
+  String path = "/postgresDb/create/measurements" + query;
+  */
+  String query = "?target_table=devices&target_id=1";
+  String path = "/postgresDb/get" + query;
+  const char* aURLPath = path.c_str();
+  Serial.println(path);
+  Serial.println(query);
   // Send request
+  int err = http.get(ipAddr,
+                      serverName,
+                      port,
+                      aURLPath
+                );
+  
+  Serial.println(err);
+  Serial.println(http.responseStatusCode());
+  if (err >= 0)
+  {
+    Serial.print("Got status code: ");
+    Serial.println(err);
+  }
+
+  // Terminate 
+  http.stop();
 }
