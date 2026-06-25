@@ -81,34 +81,21 @@ void sendData(int value, int device_id) {
   HttpClient http(wifi);
 
   // Connection Info 
-  const  IPAddress& ipAddr = "192.168.50.3";
-  const char* serverName = NULL;
+  const  IPAddress& ipAddr = IPAddress(192, 168, 50, 3);
+  const char* serverName = "192.168.50.3";
   uint16_t port = 8000;
 
-  /*
   String query = "?new_value=" + String(value) + "&new_device_id=" + String(device_id);
   String path = "/postgresDb/create/measurements" + query;
-  */
-  String query = "?target_table=devices&target_id=1";
-  String path = "/postgresDb/get" + query;
   const char* aURLPath = path.c_str();
-  Serial.println(path);
-  Serial.println(query);
+  
   // Send request
-  int err = http.get(ipAddr,
+  int err = http.post(ipAddr,
                       serverName,
                       port,
                       aURLPath
                 );
   
-  Serial.println(err);
-  Serial.println(http.responseStatusCode());
-  if (err >= 0)
-  {
-    Serial.print("Got status code: ");
-    Serial.println(err);
-  }
-
   // Terminate 
   http.stop();
 }
