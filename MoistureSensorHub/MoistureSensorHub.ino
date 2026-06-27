@@ -51,8 +51,12 @@ void loop() {
   sendData(capValue, 1);
   Serial.println(capValue);
   
+  // Resistive 
+  int resValue = analogRead(A1);
+  sendData(resValue, 2);
+  Serial.println(resValue);
 
-  delay(100000);        // delay in between reads for stability
+  delay(3600000);        // delay in between reads for stability
 }
 
 void printWifi() {
